@@ -70,7 +70,7 @@ namespace Tsukihi
 
             Client.Ready += async () =>
             {
-                Console.WriteLine("Misaki has now connected to:");
+                Console.WriteLine("Tsukihi has now connected to:");
                 Console.WriteLine(string.Join(", ", Client.Guilds));
 
                 Commands = new Commands();
