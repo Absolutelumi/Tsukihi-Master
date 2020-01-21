@@ -77,13 +77,12 @@ namespace Tsukihi.Chess
                         Pieces[x1, y1] = null;
 
                         (Pieces[x1 + (x1 - x2 > 0 ? -2 : 3), y1] as Rook).FirstMove = false;
-                        (Pieces[x2 + (x1 - x2 > 0 ? 2 : -2), y2] as King).FirstMove = false; 
+                        (Pieces[x2 + (x1 - x2 > 0 ? 2 : -2), y2] as King).FirstMove = false; // Used to be -2 : 2, probably was issue, needs to be tested
 
                         return true; 
                     }
                 }
 
-                // This part doesnt work, ? 
                 else
                 {
                     if ((Pieces[x1, y1] as King).FirstMove)
@@ -113,12 +112,44 @@ namespace Tsukihi.Chess
             return true;
         }
 
-        public KeyValuePair<Player, bool> InCheck()
+        public KeyValuePair<bool, bool> InCheck(Player currentTurn)
         {
-            // Key is for player in check, value is for whether player is checkmate'd or not 
-            // Returns null on key if no one is check'd 
+            // Key is for where player in check, value is for whether player is in checkmate
 
-            throw new NotImplementedException(); 
+            int kingx = 0;
+            int kingy = 0; 
+            for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++)
+                {
+                    if (Pieces[i, j] != null && Pieces[i, j] is King && Pieces[i, j].Type != currentTurn)
+                    {
+                        kingx = i;
+                        kingy = j; 
+                    }
+                }
+
+            KeyValuePair<bool, bool> returnValue = new KeyValuePair<bool, bool>(false, false); 
+
+            for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++)
+                {
+                    if (Pieces[i, j] != null && Pieces[i, j].CanMove(i, j, kingx, kingy, Pieces))
+                    {
+                        bool kingCanMove = false; 
+
+                        for (int k = -1; i < 2; i++)
+                        {
+                            for (int l = -1; j < 2; j++)
+                            {
+                                if (!Pieces[i, j].CanMove(i, j, kingx + k, kingy + l, Pieces)) kingCanMove = true; 
+                            }
+                        }
+
+                        if (!kingCanMove) return new KeyValuePair<bool, bool>(true, true);
+
+                        returnValue = new KeyValuePair<bool, bool>(true, false);
+                    }
+                }
+
+            return returnValue; 
         }
 
         public string UpdateBoardImage(string channelId)

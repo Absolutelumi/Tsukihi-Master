@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Timers;
 using Tsukihi.Chess;
 
 namespace Tsukihi.Services
@@ -22,17 +23,23 @@ namespace Tsukihi.Services
 
         private Regex PositionRegex = new Regex("([A-H])([1-8]) to ([A-H])([1-8])", RegexOptions.IgnoreCase);
 
+        private bool CheckMate { get; set; }
+
         public ChessService(IMessageChannel channel, IUser user)
         {
             ChessBoard = new Board();
 
             Turn = Player.White;
 
+            CheckMate = false;
+
             Player1 = new KeyValuePair<IUser, Player>(user, Player.White);
 
             ChessMessage = channel.SendFileAsync(ChessBoard.UpdateBoardImage(channel.Id.ToString()), GetStatus()).Result;
 
-            Tsukihi.Client.MessageReceived += HandleChessCommand; 
+            Tsukihi.Client.MessageReceived += HandleChessCommand;
+
+            if (CheckMate) Tsukihi.Client.MessageReceived -= HandleChessCommand; 
         }
 
         private async Task HandleChessCommand(SocketMessage message)
@@ -67,29 +74,35 @@ namespace Tsukihi.Services
                 ChessMessage = await message.Channel.SendFileAsync(ChessBoard.UpdateBoardImage(message.Channel.Id.ToString()),
                     $"{(Turn == Player.White ? Player1.Key.Mention : Player2.Key.Mention)} can promote their pawn! Type which piece you'd like! (Just type piece name, nothing else)");
 
-                // Gets here, then doesnt pick up response msg? Maybe need to unsubscribe event from lambda ? 
+                int totalLoops = 0; 
+
                 while (ChessBoard.InPromotionState())
                 {
-                    Tsukihi.Client.MessageReceived += async (msg) =>
+                    if (totalLoops >= 30) break; 
+
+                    await Task.Delay(1000);
+
+                    foreach (var msg in message.Channel.GetMessagesAsync(10).FlattenAsync().Result)
                     {
                         if (msg.Author == (Turn == Player.White ? Player1.Key : Player2.Key))
                         {
-                            if (msg.Content.Split(' ').Length != 1) return;  
+                            if (msg.Content.Split(' ').Length != 1) continue;
 
                             string[] pieceNames = { "queen", "bishop", "rook", "knight" };
 
-                            string piece = string.Empty; 
-                            
+                            string piece = string.Empty;
+
                             foreach (string name in pieceNames)
                             {
                                 if (piece == string.Empty) piece = name;
-                                else if (Extensions.ComputeLevenshteinDistance(msg.Content.ToLower(), name) < Extensions.ComputeLevenshteinDistance(msg.Content.ToLower(), piece)) piece = name; 
+                                else if (Extensions.ComputeLevenshteinDistance(msg.Content.ToLower(), name) <
+                                Extensions.ComputeLevenshteinDistance(msg.Content.ToLower(), piece)) piece = name;
                             }
 
                             switch (piece)
                             {
                                 case "queen":
-                                    ChessBoard.Promote(new Queen(Turn), --x2, --y2); 
+                                    ChessBoard.Promote(new Queen(Turn), --x2, --y2);
                                     break;
 
                                 case "bishop":
@@ -105,9 +118,30 @@ namespace Tsukihi.Services
                                     break;
                             }
 
-                            await msg.DeleteAsync(); 
+                            await msg.DeleteAsync();
                         }
-                    };
+                    }
+
+                    totalLoops++; 
+                }
+            }
+
+            var checkValues = ChessBoard.InCheck(Turn); 
+
+            // Check logic
+            if (checkValues.Key)
+            {
+                if (checkValues.Value)
+                {
+                    await ChessMessage.DeleteAsync();
+                    await message.Channel.SendMessageAsync($"**Congratulations {(Turn == Player.White ? Player1.Key.Mention : Player2.Key.Mention)}! You have won!");
+                    CheckMate = true;
+                    return; 
+                }
+
+                while (ChessBoard.InCheck(Turn).Key)
+                {
+                    // Logic for forcing player in check to move until not in check - fuck, other pieces can get king out of check, gotta change that 
                 }
             }
 
