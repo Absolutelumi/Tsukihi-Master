@@ -218,7 +218,6 @@
     <Compile Include="Chess\Queen.cs" />
     <Compile Include="Chess\Rook.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Keys.cs" />
     <Compile Include="Modules\Admin.cs" />
     <Compile Include="Modules\Chess.cs" />
     <Compile Include="Modules\General.cs" />
