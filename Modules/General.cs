@@ -52,11 +52,5 @@ namespace Tsukihi.Modules
             var rolls = Enumerable.Range(0, rollCount).Select(_ => Extensions.rng.Next(1, sides + 1));
             await ReplyAsync(":game_die: " + string.Join(" , ", rolls));
         }
-
-        [Command("test"), RequireDevServer]
-        public async Task Test()
-        {
-            await Context.Channel.SendMessageAsync(Context.Channel.Id.ToString());
-        }
     }
 }

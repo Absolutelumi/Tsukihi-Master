@@ -220,6 +220,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Modules\Admin.cs" />
     <Compile Include="Modules\Chess.cs" />
+    <Compile Include="Modules\DevModule.cs" />
     <Compile Include="Modules\General.cs" />
     <Compile Include="Objects\Commands.cs" />
     <Compile Include="Objects\HelpMenu.cs" />
@@ -237,7 +238,7 @@
     <Compile Include="Tsukihi.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

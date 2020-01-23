@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using System.Threading.Tasks;
 using Tsukihi.Services;
 using System.Linq;
+using Tsukihi.Objects;
 
 namespace Tsukihi.Modules
 {
