@@ -223,6 +223,7 @@
     <Compile Include="Modules\General.cs" />
     <Compile Include="Objects\Commands.cs" />
     <Compile Include="Objects\HelpMenu.cs" />
+    <Compile Include="Objects\PreConditionAttributes.cs" />
     <Compile Include="Objects\ReactionListener.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
