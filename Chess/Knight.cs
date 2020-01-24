@@ -17,17 +17,19 @@ namespace Tsukihi.Chess
             ImagePath = Tsukihi.ConfigPath + "ChessResources\\" + $"{(Type == Player.White ? "white" : "black")}Knight.png";
 
             if (Type == Player.White) Emoji = "♘";
-            else Emoji = "♞"; 
+            else Emoji = "♞";
         }
 
-        public void AfterMove() { }
+        public void AfterMove()
+        {
+        }
 
         public bool CanMove(int x1, int y1, int x2, int y2, IPiece[,] pieces)
         {
             if (Math.Abs(x2 - x1) == 2 && Math.Abs(y2 - y1) == 1) return true;
             if (Math.Abs(y2 - y1) == 2 && Math.Abs(x2 - x1) == 1) return true;
 
-            return false; 
+            return false;
         }
     }
 }

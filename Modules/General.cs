@@ -1,11 +1,8 @@
 ﻿using Discord;
 using Discord.Commands;
-using System;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using Tsukihi.Objects;
 
 namespace Tsukihi.Modules
@@ -14,7 +11,7 @@ namespace Tsukihi.Modules
     {
         public static IEmote Emote = new Emoji("1️⃣");
 
-        public static int Order = 1; 
+        public static int Order = 1;
 
         [Command("setprefix"), Summary("Sets command prefix for the server (admin only)"), RequireAdmin]
         public async Task SetPrefix(string prefix)
@@ -24,7 +21,7 @@ namespace Tsukihi.Modules
 
             File.WriteAllLines(Tsukihi.PrefixPath, Commands.GuildPrefixes.Select(guildPrefix => $"{guildPrefix.Key},{guildPrefix.Value}"));
 
-            await Context.Channel.SendMessageAsync($"This guild's command prefix is now {prefix}"); 
+            await Context.Channel.SendMessageAsync($"This guild's command prefix is now {prefix}");
         }
 
         [Command("getav"), Summary("Gets avatar of user")]
@@ -36,14 +33,14 @@ namespace Tsukihi.Modules
 
             if (name != null)
             {
-                // Possibly too much resource devotion ? 
+                // Possibly too much resource devotion ?
                 foreach (var user in Context.Channel.GetUsersAsync().FlattenAsync().Result)
                 {
                     if (Extensions.ComputeLevenshteinDistance(username, user.Username) < Extensions.ComputeLevenshteinDistance(username, desiredUser.Username)) desiredUser = user;
                 }
             }
 
-            await Context.Channel.SendMessageAsync(desiredUser.GetAvatarUrl()); 
+            await Context.Channel.SendMessageAsync(desiredUser.GetAvatarUrl());
         }
 
         [Command("roll"), Summary("Rolls an x sided die y times")]

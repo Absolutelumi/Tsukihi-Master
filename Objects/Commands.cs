@@ -2,11 +2,10 @@
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Tsukihi; 
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Threading.Tasks;
 using Tsukihi.Services;
 
 namespace Tsukihi.Objects
@@ -15,7 +14,7 @@ namespace Tsukihi.Objects
     {
         private DiscordSocketClient Client = Tsukihi.Client;
 
-        public  static Dictionary<ulong, string> GuildPrefixes { get; set; }
+        public static Dictionary<ulong, string> GuildPrefixes { get; set; }
 
         private CommandService commands { get; set; }
         private IServiceProvider services { get; set; }
@@ -32,7 +31,6 @@ namespace Tsukihi.Objects
 
             // Services not used by modules
 
-
             // Instantialize services that have functionality outside of being used in modules
             services = new ServiceCollection()
             .AddSingleton(Client)
@@ -47,12 +45,12 @@ namespace Tsukihi.Objects
             string prefix;
             return GuildPrefixes.TryGetValue(id, out prefix)
                 ? prefix
-                : "!"; 
+                : "!";
         }
 
         public async Task Handle(SocketMessage messageParam)
         {
-            string guildPrefix = GetGuildPrefix((messageParam.Author as SocketGuildUser).Guild.Id); 
+            string guildPrefix = GetGuildPrefix((messageParam.Author as SocketGuildUser).Guild.Id);
 
             SocketUserMessage message = messageParam as SocketUserMessage;
 

@@ -18,10 +18,10 @@ namespace Tsukihi.Chess
 
             ImagePath = Tsukihi.ConfigPath + "ChessResources\\" + $"{(Type == Player.White ? "white" : "black")}Pawn.png";
 
-            EnPassant = false; 
+            EnPassant = false;
 
             if (Type == Player.White) Emoji = "♙";
-            else Emoji = "♟"; 
+            else Emoji = "♟";
         }
 
         public void AfterMove()
@@ -33,18 +33,18 @@ namespace Tsukihi.Chess
         {
             // Basic movement
             if (Type == Player.White && y2 - y1 == 1 && x2 == x1 && pieces[x2, y2] == null) return true;
-            if (Type == Player.Black && y2 - y1 == -1 && x2 == x1 && pieces[x2, y2] == null) return true; 
+            if (Type == Player.Black && y2 - y1 == -1 && x2 == x1 && pieces[x2, y2] == null) return true;
 
-            // Moving 2 forward if first turn 
+            // Moving 2 forward if first turn
             if (Type == Player.White && y1 == 1 && y2 - y1 == 2)
             {
                 EnPassant = true;
-                return true; 
+                return true;
             }
             if (Type == Player.Black && y1 == 6 && y2 - y1 == -2)
             {
                 EnPassant = true;
-                return true; 
+                return true;
             }
 
             // Taking piece
@@ -55,9 +55,9 @@ namespace Tsukihi.Chess
             if (Type == Player.White && pieces[x2, y2] == null && pieces[x2, y1] is Pawn && (pieces[x2, y1] as Pawn).EnPassant && y2 - y1 == 1 && Math.Abs(x2 - x1) == 1) return true;
             if (Type == Player.Black && pieces[x2, y2] == null && pieces[x2, y1] is Pawn && (pieces[x2, y1] as Pawn).EnPassant && y2 - y1 == -1 && Math.Abs(x2 - x1) == 1) return true;
 
-            // Promotion - Handled externally? 
+            // Promotion - Handled externally?
 
-            return false; 
+            return false;
         }
     }
 }

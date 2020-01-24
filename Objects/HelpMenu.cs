@@ -1,10 +1,10 @@
 ﻿using Discord;
+using Discord.Commands;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Linq;
-using Discord.Commands;
-using System.Reflection;
 
 namespace Tsukihi.Objects
 {
@@ -69,15 +69,15 @@ namespace Tsukihi.Objects
         private void GetTabs()
         {
             Tabs = new Dictionary<IEmote, Embed>();
-            TabOrder = new Dictionary<int, IEmote>(); 
-            var theCrap = 
+            TabOrder = new Dictionary<int, IEmote>();
+            var theCrap =
                 Assembly.GetEntryAssembly().GetTypes().Where(type => type != typeof(ModuleBase) && typeof(ModuleBase).IsAssignableFrom(type));
 
             foreach (var module in theCrap)
             {
                 IEmote emote = (IEmote)module.GetField("Emote")?.GetValue(null);
                 int? order = (int?)module.GetField("Order")?.GetValue(null);
-                if (order == null) continue; 
+                if (order == null) continue;
                 if (emote == null) continue;
                 Embed embed = new EmbedBuilder()
                     .WithTitle(module.Name)
@@ -86,7 +86,7 @@ namespace Tsukihi.Objects
                     .Build();
 
                 Tabs.Add(emote, embed);
-                TabOrder.Add((int)order, emote); 
+                TabOrder.Add((int)order, emote);
             }
         }
 

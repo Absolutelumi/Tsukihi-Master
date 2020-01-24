@@ -7,6 +7,6 @@ namespace Tsukihi.Modules
     public class DevModule : ModuleBase
     {
         [Command("test"), RequireDevServer]
-        public async Task GetChannelId() => await Context.Channel.SendMessageAsync(Context.Channel.Id.ToString()); 
+        public async Task GetChannelId() => await Context.Channel.SendMessageAsync(Context.Channel.Id.ToString());
     }
 }

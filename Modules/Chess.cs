@@ -7,6 +7,6 @@ namespace Tsukihi.Modules
     public class Chess : ModuleBase
     {
         [Command("Chess"), Summary("Play a game of chess")]
-        public async Task PlayChess() => new ChessService(Context.Channel, Context.User); 
+        public async Task PlayChess() => new ChessService(Context.Channel, Context.User);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace Tsukihi.Chess
@@ -14,7 +13,7 @@ namespace Tsukihi.Chess
         {
             Pieces = new IPiece[8, 8];
 
-            ImagePath = Tsukihi.ConfigPath + "ChessResources\\board.png"; 
+            ImagePath = Tsukihi.ConfigPath + "ChessResources\\board.png";
 
             for (int i = 0; i < 8; i++)
             {
@@ -49,7 +48,7 @@ namespace Tsukihi.Chess
                     case 4:
                         Pieces[i, 0] = new King(Player.White);
                         Pieces[i, 7] = new King(Player.Black);
-                        break; 
+                        break;
                 }
             }
         }
@@ -59,52 +58,51 @@ namespace Tsukihi.Chess
             IPiece piece = Pieces[x1, y1];
 
             if (piece == null || piece.Type != player) return false;
-            // First half self explanatory, second returns false if player is trying to move piece to another ally's position, IF they are not rook or king (b/c of castling) 
+            // First half self explanatory, second returns false if player is trying to move piece to another ally's position, IF they are not rook or king (b/c of castling)
             if (!Pieces[x1, y1].CanMove(x1, y1, x2, y2, Pieces)) return false;
-            if (Pieces[x2, y2] != null) if ((!(Pieces[x1, y1] is Rook) && !(Pieces[x1, y1] is King) && Pieces[x2, y2].Type == Pieces[x1, y1].Type)) return false; 
+            if (Pieces[x2, y2] != null) if ((!(Pieces[x1, y1] is Rook) && !(Pieces[x1, y1] is King) && Pieces[x2, y2].Type == Pieces[x1, y1].Type)) return false;
             Pieces[x1, y1].AfterMove();
 
             // Castling Logic - Optimize ???????
             if (Pieces[x2, y2] != null) if (Pieces[x1, y1] is Rook || Pieces[x1, y1] is King && Pieces[x2, y2] is Rook || Pieces[x2, y2] is King)
-            {
-                if (Pieces[x1, y1] is Rook)
                 {
-                    if ((Pieces[x1, y1] as Rook).FirstMove)
+                    if (Pieces[x1, y1] is Rook)
                     {
-                        Pieces[x2 + (x1 - x2 > 0 ? 2 : -2), y2] = Pieces[x2, y2];
-                        Pieces[x2, y2] = null;
+                        if ((Pieces[x1, y1] as Rook).FirstMove)
+                        {
+                            Pieces[x2 + (x1 - x2 > 0 ? 2 : -2), y2] = Pieces[x2, y2];
+                            Pieces[x2, y2] = null;
 
-                        Pieces[x1 + (x1 - x2 > 0 ? -2 : 3), y1] = Pieces[x1, y1];
-                        Pieces[x1, y1] = null;
+                            Pieces[x1 + (x1 - x2 > 0 ? -2 : 3), y1] = Pieces[x1, y1];
+                            Pieces[x1, y1] = null;
 
-                        (Pieces[x1 + (x1 - x2 > 0 ? -2 : 3), y1] as Rook).FirstMove = false;
-                        (Pieces[x2 + (x1 - x2 > 0 ? 2 : -2), y2] as King).FirstMove = false; // Used to be -2 : 2, probably was issue, needs to be tested :: irrelevant ? same issue... merge logic?
+                            (Pieces[x1 + (x1 - x2 > 0 ? -2 : 3), y1] as Rook).FirstMove = false;
+                            (Pieces[x2 + (x1 - x2 > 0 ? 2 : -2), y2] as King).FirstMove = false; // Used to be -2 : 2, probably was issue, needs to be tested :: irrelevant ? same issue... merge logic?
 
-                        return true; 
+                            return true;
+                        }
                     }
+                    else
+                    {
+                        if ((Pieces[x1, y1] as King).FirstMove)
+                        {
+                            Pieces[x1 + (x2 - x1 > 0 ? 2 : -2), y1] = Pieces[x1, y1];
+                            Pieces[x1, y1] = null;
+
+                            Pieces[x2 + (x2 - x1 > 0 ? -2 : 3), y2] = Pieces[x2, y2];
+                            Pieces[x2, y2] = null;
+
+                            (Pieces[x2 + (x2 - x1 > 0 ? -2 : 3), y2] as Rook).FirstMove = false;
+                            (Pieces[x1 + (x2 - x1 > 0 ? 2 : -2), y1] as King).FirstMove = false;
+
+                            return true;
+                        }
+                    }
+
+                    return false;
                 }
 
-                else
-                {
-                    if ((Pieces[x1, y1] as King).FirstMove)
-                    {
-                        Pieces[x1 + (x2 - x1 > 0 ? 2 : -2), y1] = Pieces[x1, y1];
-                        Pieces[x1, y1] = null;
-
-                        Pieces[x2 + (x2 - x1 > 0 ? -2 : 3), y2] = Pieces[x2, y2];
-                        Pieces[x2, y2] = null;
-
-                        (Pieces[x2 + (x2 - x1 > 0 ? -2 : 3), y2] as Rook).FirstMove = false;
-                        (Pieces[x1 + (x2 - x1 > 0 ? 2 : -2), y1] as King).FirstMove = false;
-
-                        return true;
-                    }
-                }
-
-                return false; 
-            }
-
-            if (Pieces[x1, y1] is Pawn && x2 - x1 != 0) Pieces[x2, y1] = null; 
+            if (Pieces[x1, y1] is Pawn && x2 - x1 != 0) Pieces[x2, y1] = null;
 
             Pieces[x2, y2] = Pieces[x1, y1];
 
@@ -118,29 +116,29 @@ namespace Tsukihi.Chess
             // Key is for where player in check, value is for whether player is in checkmate
 
             int kingx = 0;
-            int kingy = 0; 
+            int kingy = 0;
             for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++)
                 {
                     if (Pieces[i, j] != null && Pieces[i, j] is King && Pieces[i, j].Type != currentTurn)
                     {
                         kingx = i;
-                        kingy = j; 
+                        kingy = j;
                     }
                 }
 
-            KeyValuePair<bool, bool> returnValue = new KeyValuePair<bool, bool>(false, false); 
+            KeyValuePair<bool, bool> returnValue = new KeyValuePair<bool, bool>(false, false);
 
             for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++)
                 {
                     if (Pieces[i, j] != null && Pieces[i, j].Type == currentTurn && Pieces[i, j].CanMove(i, j, kingx, kingy, Pieces))
                     {
-                        bool kingCanMove = false; 
+                        bool kingCanMove = false;
 
                         for (int k = -1; i < 2; i++)
                         {
                             for (int l = -1; j < 2; j++)
                             {
-                                if (!Pieces[k, j].CanMove(i, j, kingx + k, kingy + l, Pieces)) kingCanMove = true; 
+                                if (!Pieces[k, j].CanMove(i, j, kingx + k, kingy + l, Pieces)) kingCanMove = true;
                             }
                         }
 
@@ -150,12 +148,12 @@ namespace Tsukihi.Chess
                     }
                 }
 
-            return returnValue; 
+            return returnValue;
         }
 
         public string UpdateBoardImage(string channelId)
         {
-            Bitmap boardImage = new Bitmap(this.ImagePath); 
+            Bitmap boardImage = new Bitmap(this.ImagePath);
 
             using (var graphics = Graphics.FromImage(boardImage))
             {
@@ -164,7 +162,7 @@ namespace Tsukihi.Chess
                     for (int j = 0; j < 8; j++)
                     {
                         // If needed for performance, can make bitmap variable for each piece type and load here manually, but pref. not considering ammount of code neccessary to do
-                        if (Pieces[j, i] == null) continue; 
+                        if (Pieces[j, i] == null) continue;
                         graphics.DrawImage(new Bitmap(Pieces[j, i].ImagePath), new Rectangle(65 + 138 * j, 65 + 138 * (7 - i), 120, 120));
                     }
                 }
@@ -172,7 +170,7 @@ namespace Tsukihi.Chess
 
             string path = Tsukihi.TempPath + $"chess{channelId}.png";
             boardImage.Save(path);
-            return path; 
+            return path;
         }
 
         public bool InPromotionState()
@@ -180,10 +178,10 @@ namespace Tsukihi.Chess
             for (int i = 0; i < 8; i++)
             {
                 if (Pieces[i, 0] is Pawn) return true;
-                if (Pieces[i, 7] is Pawn) return true; 
+                if (Pieces[i, 7] is Pawn) return true;
             }
 
-            return false; 
+            return false;
         }
 
         public void Promote(IPiece piece, int x, int y) => Pieces[x, y] = piece;

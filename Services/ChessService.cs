@@ -11,9 +11,9 @@ namespace Tsukihi.Services
 {
     public class ChessService
     {
-        Board ChessBoard { get; set; }
+        private Board ChessBoard { get; set; }
 
-        IUserMessage ChessMessage { get; set; }
+        private IUserMessage ChessMessage { get; set; }
 
         private KeyValuePair<IUser, Player> Player1 { get; set; } // Always white player
 
@@ -39,14 +39,14 @@ namespace Tsukihi.Services
 
             Tsukihi.Client.MessageReceived += HandleChessCommand;
 
-            if (CheckMate) Tsukihi.Client.MessageReceived -= HandleChessCommand; 
+            if (CheckMate) Tsukihi.Client.MessageReceived -= HandleChessCommand;
         }
 
         private async Task HandleChessCommand(SocketMessage message)
         {
-            if (Player2.Key == null && Turn == Player.Black && message.Author != Player1.Key && PositionRegex.IsMatch(message.Content)) Player2 = new KeyValuePair<IUser, Player>(message.Author, Player.Black); 
+            if (Player2.Key == null && Turn == Player.Black && message.Author != Player1.Key && PositionRegex.IsMatch(message.Content)) Player2 = new KeyValuePair<IUser, Player>(message.Author, Player.Black);
             if (message.Author != Player1.Key && message.Author != Player2.Key) return;
-            if ((message.Author == Player1.Key ? Player1 : Player2).Value != Turn) return; 
+            if ((message.Author == Player1.Key ? Player1 : Player2).Value != Turn) return;
             if (!PositionRegex.IsMatch(message.Content)) return;
 
             Player player = message.Author == Player1.Key ? Player1.Value : Player2.Value;
@@ -54,7 +54,7 @@ namespace Tsukihi.Services
             Match positionMatch = PositionRegex.Match(message.Content);
 
             int x1 = ConvertLetterToCoord(PositionRegex.Match(message.Content).Groups[1].Value);
-            int x2 = ConvertLetterToCoord(PositionRegex.Match(message.Content).Groups[3].Value); 
+            int x2 = ConvertLetterToCoord(PositionRegex.Match(message.Content).Groups[3].Value);
 
             int y1 = Convert.ToInt32(positionMatch.Groups[2].Value);
             int y2 = Convert.ToInt32(positionMatch.Groups[4].Value);
@@ -62,9 +62,9 @@ namespace Tsukihi.Services
             if (!ChessBoard.Move(player, --x1, --y1, --x2, --y2))
             {
                 await ChessMessage.DeleteAsync();
-                await message.DeleteAsync(); 
+                await message.DeleteAsync();
                 ChessMessage = await message.Channel.SendFileAsync(ChessBoard.UpdateBoardImage(message.Channel.Id.ToString()), GetStatus("You cannot make that move!"));
-                return; 
+                return;
             }
 
             // Promotion logic..........
@@ -74,11 +74,11 @@ namespace Tsukihi.Services
                 ChessMessage = await message.Channel.SendFileAsync(ChessBoard.UpdateBoardImage(message.Channel.Id.ToString()),
                     $"{(Turn == Player.White ? Player1.Key.Mention : Player2.Key.Mention)} can promote their pawn! Type which piece you'd like! (Just type piece name, nothing else)");
 
-                int totalLoops = 0; 
+                int totalLoops = 0;
 
                 while (ChessBoard.InPromotionState())
                 {
-                    if (totalLoops >= 30) break; 
+                    if (totalLoops >= 30) break;
 
                     await Task.Delay(1000);
 
@@ -122,11 +122,11 @@ namespace Tsukihi.Services
                         }
                     }
 
-                    totalLoops++; 
+                    totalLoops++;
                 }
             }
 
-            var checkValues = ChessBoard.InCheck(Turn); 
+            var checkValues = ChessBoard.InCheck(Turn);
 
             // Check logic
             if (checkValues.Key)
@@ -136,12 +136,12 @@ namespace Tsukihi.Services
                     await ChessMessage.DeleteAsync();
                     await message.Channel.SendMessageAsync($"**Congratulations {(Turn == Player.White ? Player1.Key.Mention : Player2.Key.Mention)}! You have won!**");
                     CheckMate = true;
-                    return; 
+                    return;
                 }
 
                 while (ChessBoard.InCheck(Turn).Key)
                 {
-                    // Logic for forcing player in check to move until not in check - fuck, other pieces can get king out of check, gotta change that 
+                    // Logic for forcing player in check to move until not in check - fuck, other pieces can get king out of check, gotta change that
                 }
             }
 
@@ -150,12 +150,12 @@ namespace Tsukihi.Services
             await ChessMessage.DeleteAsync();
             ChessMessage = await message.Channel.SendFileAsync(ChessBoard.UpdateBoardImage(message.Channel.Id.ToString()), GetStatus());
 
-            await message.DeleteAsync(); 
+            await message.DeleteAsync();
         }
 
         private string GetStatus(string errorMsg = "")
         {
-            // ToDo: Add {optional} string in beginning that is blank if no check, and states which player is in check/checkmate when applicable 
+            // ToDo: Add {optional} string in beginning that is blank if no check, and states which player is in check/checkmate when applicable
             return $"{errorMsg} **It is {(Turn == Player.White ? Player1.Key.Mention : (Player2.Key == null ? "someone" : Player2.Key.Mention))}'s  ({(Turn == Player.White ? "White" : "Black")}) turn!**"; // B/c player1 always white and vise versa
         }
 
@@ -188,7 +188,7 @@ namespace Tsukihi.Services
                     return 8;
 
                 default:
-                    return 0; 
+                    return 0;
             }
         }
     }

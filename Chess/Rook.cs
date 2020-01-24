@@ -16,13 +16,15 @@
 
             ImagePath = Tsukihi.ConfigPath + "ChessResources\\" + $"{(Type == Player.White ? "white" : "black")}Rook.png";
 
-            FirstMove = true; 
+            FirstMove = true;
 
             if (Type == Player.White) Emoji = "♖";
-            else Emoji = "♜"; 
+            else Emoji = "♜";
         }
 
-        public void AfterMove() { }
+        public void AfterMove()
+        {
+        }
 
         public bool CanMove(int x1, int y1, int x2, int y2, IPiece[,] pieces)
         {
@@ -45,7 +47,7 @@
                     }
                 }
 
-                return true; 
+                return true;
             }
 
             if (y1 == y2)
@@ -67,10 +69,10 @@
                     }
                 }
 
-                return true; 
+                return true;
             }
 
-            return false; 
+            return false;
         }
     }
 }
