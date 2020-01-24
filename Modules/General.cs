@@ -52,29 +52,5 @@ namespace Tsukihi.Modules
             var rolls = Enumerable.Range(0, rollCount).Select(_ => Extensions.rng.Next(1, sides + 1));
             await ReplyAsync(":game_die: " + string.Join(" , ", rolls));
         }
-
-        [Command("test")]
-        public async Task Test(IRole role)
-        {
-            ulong roleId = role.Id;
-
-            var bruhRole = Context.Guild.GetRole(roleId);
-
-            int bruh = 2;
-        }
-    }
-
-    public class RequireAdmin : PreconditionAttribute
-    {
-        public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
-        {
-            var guildUser = context.User as IGuildUser;
-
-            if (guildUser == null) return PreconditionResult.FromError("This cannot be done outside of a server.");
-
-            return guildUser.GuildPermissions.Administrator
-                ? PreconditionResult.FromSuccess()
-                : PreconditionResult.FromError("You need admin to use this command."); 
-        }
     }
 }

@@ -70,7 +70,8 @@ namespace Tsukihi.Objects
         {
             Tabs = new Dictionary<IEmote, Embed>();
             TabOrder = new Dictionary<int, IEmote>(); 
-            var theCrap = Assembly.GetEntryAssembly().GetTypes().Where(type => type != typeof(ModuleBase) && typeof(ModuleBase).IsAssignableFrom(type));
+            var theCrap = 
+                Assembly.GetEntryAssembly().GetTypes().Where(type => type != typeof(ModuleBase) && typeof(ModuleBase).IsAssignableFrom(type));
 
             foreach (var module in theCrap)
             {
