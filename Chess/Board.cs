@@ -61,7 +61,8 @@ namespace Tsukihi.Chess
             if (piece == null || piece.Type != player) return false;
             // First half self explanatory, second returns false if player is trying to move piece to another ally's position, IF they are not rook or king (b/c of castling) 
             if (!Pieces[x1, y1].CanMove(x1, y1, x2, y2, Pieces)) return false;
-            if (Pieces[x2, y2] != null) if ((!(Pieces[x1, y1] is Rook) && !(Pieces[x1, y1] is King) && Pieces[x2, y2].Type == Pieces[x1, y1].Type)) return false;
+            if (Pieces[x2, y2] != null) if ((!(Pieces[x1, y1] is Rook) && !(Pieces[x1, y1] is King) && Pieces[x2, y2].Type == Pieces[x1, y1].Type)) return false; 
+            Pieces[x1, y1].AfterMove();
 
             // Castling Logic - Optimize ???????
             if (Pieces[x2, y2] != null) if (Pieces[x1, y1] is Rook || Pieces[x1, y1] is King && Pieces[x2, y2] is Rook || Pieces[x2, y2] is King)
@@ -77,7 +78,7 @@ namespace Tsukihi.Chess
                         Pieces[x1, y1] = null;
 
                         (Pieces[x1 + (x1 - x2 > 0 ? -2 : 3), y1] as Rook).FirstMove = false;
-                        (Pieces[x2 + (x1 - x2 > 0 ? 2 : -2), y2] as King).FirstMove = false; // Used to be -2 : 2, probably was issue, needs to be tested
+                        (Pieces[x2 + (x1 - x2 > 0 ? 2 : -2), y2] as King).FirstMove = false; // Used to be -2 : 2, probably was issue, needs to be tested :: irrelevant ? same issue... merge logic?
 
                         return true; 
                     }
@@ -131,7 +132,7 @@ namespace Tsukihi.Chess
 
             for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++)
                 {
-                    if (Pieces[i, j] != null && Pieces[i, j].CanMove(i, j, kingx, kingy, Pieces))
+                    if (Pieces[i, j] != null && Pieces[i, j].Type == currentTurn && Pieces[i, j].CanMove(i, j, kingx, kingy, Pieces))
                     {
                         bool kingCanMove = false; 
 
@@ -139,7 +140,7 @@ namespace Tsukihi.Chess
                         {
                             for (int l = -1; j < 2; j++)
                             {
-                                if (!Pieces[i, j].CanMove(i, j, kingx + k, kingy + l, Pieces)) kingCanMove = true; 
+                                if (!Pieces[k, j].CanMove(i, j, kingx + k, kingy + l, Pieces)) kingCanMove = true; 
                             }
                         }
 

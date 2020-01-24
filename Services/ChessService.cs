@@ -134,7 +134,7 @@ namespace Tsukihi.Services
                 if (checkValues.Value)
                 {
                     await ChessMessage.DeleteAsync();
-                    await message.Channel.SendMessageAsync($"**Congratulations {(Turn == Player.White ? Player1.Key.Mention : Player2.Key.Mention)}! You have won!");
+                    await message.Channel.SendMessageAsync($"**Congratulations {(Turn == Player.White ? Player1.Key.Mention : Player2.Key.Mention)}! You have won!**");
                     CheckMate = true;
                     return; 
                 }

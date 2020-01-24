@@ -22,6 +22,8 @@
             else Emoji = "♜"; 
         }
 
+        public void AfterMove() { }
+
         public bool CanMove(int x1, int y1, int x2, int y2, IPiece[,] pieces)
         {
             if (x1 == x2)
