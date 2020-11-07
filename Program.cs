@@ -2,14 +2,14 @@
 
 namespace Tsukihi
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.Title = "Tsukihi";
             Console.ForegroundColor = ConsoleColor.White;
 
-            new Tsukihi(); 
+            new Tsukihi();
         }
     }
 }

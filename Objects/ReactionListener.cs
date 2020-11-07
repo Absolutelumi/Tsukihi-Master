@@ -1,19 +1,21 @@
 ﻿using Discord;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Tsukihi.Objects
 {
-    class ReactionListener : IDisposable
+    internal class ReactionListener : IDisposable
     {
         public enum Action { Added, Removed }
+
         public delegate Task OnReactionChangedHandler(IEmote emote, Action action);
+
         public event OnReactionChangedHandler OnReactionChanged;
 
         private IUserMessage Message;
         private Dictionary<int, IEmote> Emotes;
+
         public ReactionListener(IUserMessage message, Dictionary<int, IEmote> emotes)
         {
             Message = message;
@@ -48,7 +50,7 @@ namespace Tsukihi.Objects
             for (int i = 0; i < Emotes.Count; i++)
             {
                 IEmote emote;
-                Emotes.TryGetValue(i + 1, out emote); 
+                Emotes.TryGetValue(i + 1, out emote);
                 await Task.Delay(250);
                 await Message.AddReactionAsync(emote);
             }

@@ -11,7 +11,7 @@ namespace Tsukihi.Services
     {
         private Dictionary<ulong, ulong> DefaultRoles { get; set; }
 
-        private static string DefaultRolePath = Tsukihi.ConfigPath + "defaultroles.txt"; 
+        private static string DefaultRolePath = Tsukihi.ConfigPath + "defaultroles.txt";
 
         public AdminService()
         {
@@ -22,7 +22,7 @@ namespace Tsukihi.Services
             foreach (var data in File.ReadAllLines(DefaultRolePath))
             {
                 var splitData = data.Split(',');
-                DefaultRoles.Add(Convert.ToUInt64(splitData[0]), Convert.ToUInt64(splitData[1])); 
+                DefaultRoles.Add(Convert.ToUInt64(splitData[0]), Convert.ToUInt64(splitData[1]));
             }
         }
 
@@ -39,7 +39,7 @@ namespace Tsukihi.Services
 
             DefaultRoles.TryGetValue(user.Guild.Id, out ulong roleId);
 
-            await user.AddRoleAsync(user.Guild.GetRole(roleId)); 
+            await user.AddRoleAsync(user.Guild.GetRole(roleId));
         }
     }
 }

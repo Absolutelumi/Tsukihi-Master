@@ -1,22 +1,22 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using System;
-using Tsukihi.Objects;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using Tsukihi.Objects;
 
 namespace Tsukihi
 {
     public class Tsukihi
     {
         public static readonly string ConfigPath = Properties.Settings.Default.ConfigDirectory;
-        public static readonly string TempPath = Properties.Settings.Default.TempDirectory; 
+        public static readonly string TempPath = Properties.Settings.Default.TempDirectory;
 
         public static readonly string PrefixPath = Tsukihi.ConfigPath + "\\prefix.txt";
 
-        public Dictionary<ulong, string> GuildPrefixes = new Dictionary<ulong, string>(); 
+        public Dictionary<ulong, string> GuildPrefixes = new Dictionary<ulong, string>();
 
         public static DiscordSocketClient Client { get; set; }
 
@@ -24,11 +24,11 @@ namespace Tsukihi
         public Commands Commands;
         private DiscordSocketConfig clientConfig;
 
-        public Tsukihi() => StartAsync().GetAwaiter().GetResult(); 
+        public Tsukihi() => StartAsync().GetAwaiter().GetResult();
 
         private Task Logger(LogMessage e)
         {
-            if (e.Message != null && (e.Message.Contains("Rate limit") || e.Message.Contains("blocking the gateway task"))) return Task.CompletedTask; 
+            if (e.Message != null && (e.Message.Contains("Rate limit") || e.Message.Contains("blocking the gateway task"))) return Task.CompletedTask;
             switch (e.Severity)
             {
                 case LogSeverity.Critical:
@@ -52,7 +52,7 @@ namespace Tsukihi
             Console.WriteLine($"{DateTime.Now,-19} [{e.Severity,8}] {e.Source}: {e.Message}");
             Console.ResetColor();
 
-            return Task.CompletedTask; 
+            return Task.CompletedTask;
         }
 
         private async Task StartAsync()

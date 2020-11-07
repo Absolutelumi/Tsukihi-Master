@@ -1,10 +1,10 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using System.Threading.Tasks;
-using Tsukihi.Services;
 using System.Linq;
+using System.Threading.Tasks;
 using Tsukihi.Objects;
+using Tsukihi.Services;
 
 namespace Tsukihi.Modules
 {
@@ -25,18 +25,18 @@ namespace Tsukihi.Modules
                 return;
             }
             AdminService.UpdateDefaultRoles(Context.Guild.Id, role.Id);
-            await Context.Channel.SendMessageAsync($"The default role for this server is now {role.Name}."); 
+            await Context.Channel.SendMessageAsync($"The default role for this server is now {role.Name}.");
         }
 
         [Command("deletemessages"), Summary("(Mass)Deletes messages"), RequireAdmin]
         public async Task DeleteMessages(int count)
         {
-            foreach (var message in Context.Channel.GetMessagesAsync(count+1).FlattenAsync().Result)
+            foreach (var message in Context.Channel.GetMessagesAsync(count + 1).FlattenAsync().Result)
             {
-                await message.DeleteAsync(); 
+                await message.DeleteAsync();
             }
 
-            await Context.Channel.SendMessageAsync($"Deleted {count} messages."); 
+            await Context.Channel.SendMessageAsync($"Deleted {count} messages.");
         }
 
         [Command("deletemessagesfrom"), Summary("Deletes messages from a user in a channel up to 1000 messages ago"), RequireAdmin]
@@ -47,7 +47,7 @@ namespace Tsukihi.Modules
                 if (message.Author == user) await message.DeleteAsync();
             }
 
-            await Context.Channel.SendMessageAsync($"Deleted {user.Mention}'s messages."); 
+            await Context.Channel.SendMessageAsync($"Deleted {user.Mention}'s messages.");
         }
     }
 }
