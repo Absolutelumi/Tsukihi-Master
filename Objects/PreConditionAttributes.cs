@@ -9,7 +9,7 @@ namespace Tsukihi.Objects
     {
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
-            var guildUser = context.User as IGuildUser;
+            IGuildUser guildUser = context.User as IGuildUser;
 
             if (guildUser == null) return PreconditionResult.FromError("This cannot be done outside of a server.");
 

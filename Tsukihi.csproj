@@ -219,8 +219,8 @@
     <Compile Include="Chess\Rook.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Modules\Admin.cs" />
-    <Compile Include="Modules\Chess.cs" />
     <Compile Include="Modules\DevModule.cs" />
+    <Compile Include="Modules\Games.cs" />
     <Compile Include="Modules\General.cs" />
     <Compile Include="Objects\Commands.cs" />
     <Compile Include="Objects\HelpMenu.cs" />
@@ -234,6 +234,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Services\AdminService.cs" />
+    <Compile Include="Services\AntiCorbinService.cs" />
     <Compile Include="Services\ChessService.cs" />
     <Compile Include="Tsukihi.cs" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using System;
 using System.IO;
 using System.Linq;
@@ -51,6 +52,43 @@ namespace Tsukihi.Modules
         {
             var rolls = Enumerable.Range(0, rollCount).Select(_ => Extensions.rng.Next(1, sides + 1));
             await ReplyAsync(":game_die: " + string.Join(" , ", rolls));
+        }
+
+        [Command("whowins"), Summary("Who?")]
+        public async Task WhoWins([Remainder] string value)
+        {
+            string[] values = value.Split(' ');
+
+            string amount1 = values[0];
+            string type1 = "";
+            string amount2 = ""; 
+            string type2 = "";
+
+            int type2Start = 0; 
+
+            for (int i = 1; i < values.Length; i++)
+            {
+                if (values[i].All(char.IsDigit))
+                {
+                    type2Start = i + 1;
+                    amount2 = values[i];
+                    break; 
+                }
+                else type1 += values[i] + ' '; 
+            }
+
+            for (int i = type2Start; i < values.Length; i++) type2 += values[i] + ' '; 
+
+            Random random = new Random();
+
+            if (random.Next(0, 2) == 0) await ReplyAsync($"{amount1} {type1}");
+            else await ReplyAsync($"{amount2} {type2}");
+        }
+
+        [Command("getuserid")]
+        public async Task getUserID(IGuildUser user)
+        {
+            await ReplyAsync(user.Id.ToString());
         }
     }
 }

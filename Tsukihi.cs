@@ -20,6 +20,7 @@ namespace Tsukihi
 
         public static DiscordSocketClient Client { get; set; }
 
+
         public Commands Commands;
         private DiscordSocketConfig clientConfig;
 

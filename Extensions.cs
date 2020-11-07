@@ -243,5 +243,19 @@ namespace Tsukihi
         {
             return new Discord.Color(rng.Next(0, 256), rng.Next(0, 256), rng.Next(0, 256));
         }
+
+        // Copies array to target array 
+        public static void CopyTo(this Array arraySource, Array arrayTarget)
+        {
+            if (arraySource.Rank != arrayTarget.Rank || arraySource.Length != arrayTarget.Length) return;
+
+            for (int i1 = 0; i1 < arraySource.GetLength(0); i1++)
+            {
+                for (int i2 = 0; i2 < arraySource.GetLength(1); i2++)
+                {
+                    
+                }
+            }
+        }
     }
 }

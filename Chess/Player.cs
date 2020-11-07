@@ -1,6 +1,6 @@
 ﻿namespace Tsukihi.Chess
 {
-    public enum Player
+    public enum PlayerType
     {
         Black, 
         White

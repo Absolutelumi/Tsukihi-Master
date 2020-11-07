@@ -77,8 +77,7 @@ namespace Tsukihi.Objects
             {
                 IEmote emote = (IEmote)module.GetField("Emote")?.GetValue(null);
                 int? order = (int?)module.GetField("Order")?.GetValue(null);
-                if (order == null) continue; 
-                if (emote == null) continue;
+                if (order == null || emote == null) continue; 
                 Embed embed = new EmbedBuilder()
                     .WithTitle(module.Name)
                     .WithDescription(BuildModuleDescription(module))

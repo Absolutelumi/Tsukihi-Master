@@ -31,7 +31,7 @@ namespace Tsukihi.Objects
             }
 
             // Services not used by modules
-
+            
 
             // Instantialize services that have functionality outside of being used in modules
             services = new ServiceCollection()

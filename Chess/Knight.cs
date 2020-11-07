@@ -6,17 +6,17 @@ namespace Tsukihi.Chess
     {
         public string ImagePath { get; set; }
 
-        public Player Type { get; set; }
+        public PlayerType Type { get; set; }
 
         public string Emoji { get; set; }
 
-        public Knight(Player type)
+        public Knight(PlayerType type)
         {
             Type = type;
 
-            ImagePath = Tsukihi.ConfigPath + "ChessResources\\" + $"{(Type == Player.White ? "white" : "black")}Knight.png";
+            ImagePath = Tsukihi.ConfigPath + "ChessResources\\" + $"{(Type == PlayerType.White ? "white" : "black")}Knight.png";
 
-            if (Type == Player.White) Emoji = "♘";
+            if (Type == PlayerType.White) Emoji = "♘";
             else Emoji = "♞"; 
         }
 
