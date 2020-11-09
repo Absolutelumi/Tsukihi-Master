@@ -68,10 +68,7 @@ namespace Tsukihi.Objects
             var context = new CommandContext(Client, message);
             var result = await commands.ExecuteAsync(context, argPos, services);
 
-            if (!result.IsSuccess)
-            {
-                await context.Channel.SendMessageAsync(result.ErrorReason);
-            }
+            if (!result.IsSuccess) await context.Channel.SendMessageAsync(result.ErrorReason);
         }
 
         public async Task Install()

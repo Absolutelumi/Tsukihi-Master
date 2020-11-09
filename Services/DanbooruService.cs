@@ -16,7 +16,8 @@ namespace Tsukihi.Services
 
         public static string GetRandomImage(string[] arg)
         {
-            return GetRandomPost(arg).ImageUrl;
+            var post = GetRandomPost(arg);
+            return post.large_file_url ?? post.source;
         }
 
         private static Post GetRandomPost(string[] arg, int? page = null)
@@ -49,13 +50,7 @@ namespace Tsukihi.Services
         {
             public string large_file_url;
 
-            public string ImageUrl
-            {
-                get
-                {
-                    return large_file_url;
-                }
-            }
+            public string source; 
         }
 
 #pragma warning restore 0649

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Tsukihi
@@ -182,11 +183,13 @@ namespace Tsukihi
 
         public static string GetPicture(string url)
         {
+            string path;
             using (var webClient = new WebClient())
             {
-                webClient.DownloadFile(url, Tsukihi.TempPath + "temp.png");
+                path = $"{url.Split('/')[url.Split('/').Length - 1]}temp.{(url.Contains("png") ? "png" : url.Contains("jpg") ? "jpg" : "jpeg")}";
+                webClient.DownloadFile(new Uri(url), Tsukihi.TempPath + path);
             }
-            return Tsukihi.TempPath + "temp.png";
+            return Tsukihi.TempPath + path;
         }
 
         public static string GetPictureUrl(string path)

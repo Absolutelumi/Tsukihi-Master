@@ -238,6 +238,7 @@
     <Compile Include="Services\AntiCorbinService.cs" />
     <Compile Include="Services\ChessService.cs" />
     <Compile Include="Services\DanbooruService.cs" />
+    <Compile Include="Services\GelbooruService.cs" />
     <Compile Include="Tsukihi.cs" />
   </ItemGroup>
   <ItemGroup>
