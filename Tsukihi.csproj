@@ -196,6 +196,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -236,6 +237,7 @@
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\AntiCorbinService.cs" />
     <Compile Include="Services\ChessService.cs" />
+    <Compile Include="Services\DanbooruService.cs" />
     <Compile Include="Tsukihi.cs" />
   </ItemGroup>
   <ItemGroup>

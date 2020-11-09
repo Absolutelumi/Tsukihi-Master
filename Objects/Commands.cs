@@ -60,7 +60,10 @@ namespace Tsukihi.Objects
 
             int argPos = 0;
 
-            if (!(message.HasStringPrefix(guildPrefix, ref argPos) || message.HasMentionPrefix(Client.CurrentUser, ref argPos)) || message.Author.IsBot || message.Content == guildPrefix.ToString()) return;
+            if (!(message.HasStringPrefix(guildPrefix, ref argPos) 
+                || message.HasMentionPrefix(Client.CurrentUser, ref argPos)) 
+                || message.Author.IsBot 
+                || message.Content == guildPrefix.ToString()) return;
 
             var context = new CommandContext(Client, message);
             var result = await commands.ExecuteAsync(context, argPos, services);

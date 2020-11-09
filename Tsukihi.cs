@@ -80,14 +80,13 @@ namespace Tsukihi
                 // Bot status  ? ?
             };
 
-            Client.Disconnected += (_) =>
+            Client.Disconnected += async (_) => // Currently just restarts entire client on disconnect - problematic 
             {
                 Process.Start(new ProcessStartInfo()
                 {
                     FileName = Directory.GetCurrentDirectory() + "\\Tsukihi.exe"
                 });
                 Environment.Exit(0);
-                return Task.CompletedTask;
             };
 
             await Task.Delay(-1);

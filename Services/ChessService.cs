@@ -35,7 +35,7 @@ namespace Tsukihi.Services
 
             Check = new KeyValuePair<bool, PlayerType>(false, PlayerType.White); 
 
-            ChessMessage = channel.SendFileAsync(ChessBoard.UpdateBoardImage(channel.Id.ToString()), GetStatus()).Result;
+            ChessMessage = channel.SendMessageAsync(embed: GetEmbed(channel.Id.ToString())).Result;
 
             Tsukihi.Client.MessageReceived += HandleChessCommand;
         }
@@ -63,8 +63,8 @@ namespace Tsukihi.Services
             if (!ChessBoard.Move(player, x1, y1, x2, y2)) 
             {
                 await ChessMessage.DeleteAsync();
-                await message.DeleteAsync(); 
-                ChessMessage = await message.Channel.SendFileAsync(ChessBoard.UpdateBoardImage(message.Channel.Id.ToString()), GetStatus("You cannot make that move!"));
+                await message.DeleteAsync();
+                ChessMessage = message.Channel.SendMessageAsync(embed: GetEmbed(message.Channel.Id.ToString(), "You cannot make that move!")).Result;
                 return; 
             }
 
@@ -80,8 +80,8 @@ namespace Tsukihi.Services
             if (checkValues.Value) 
             {
                 await ChessMessage.DeleteAsync();
-                await message.Channel.SendFileAsync(ChessBoard.UpdateBoardImage(message.Channel.Id.ToString()), 
-                    $"**Congratulations {(Turn == PlayerType.White ? Player1.Key.Mention : Player2.Key.Mention)}! You have won!**");
+                await message.Channel.SendMessageAsync(embed: GetEmbed(message.Channel.Id.ToString(), 
+                    $"**Congratulations {(Turn == PlayerType.White ? Player1.Key.Username : Player2.Key.Username)}! You have won!**"));
                 Tsukihi.Client.MessageReceived -= HandleChessCommand;
                 return;
             }
@@ -143,19 +143,27 @@ namespace Tsukihi.Services
             Turn = Turn == PlayerType.White ? PlayerType.Black : PlayerType.White;
 
             await ChessMessage.DeleteAsync();
-            ChessMessage = await message.Channel.SendFileAsync(ChessBoard.UpdateBoardImage(message.Channel.Id.ToString()), GetStatus());
+            ChessMessage = message.Channel.SendMessageAsync(embed: GetEmbed(message.Channel.Id.ToString())).Result;
 
             await message.DeleteAsync(); 
         }
 
-        private string GetStatus(string errorMsg = "")
+        private Embed GetEmbed(string channelId, string errorMsg = "")
         {
-            string checkMsg = 
+            var user = Turn == PlayerType.White ? Player1.Key : Player2.Key;
+
+            string checkMsg =
                 Check.Key ? $"{(Check.Value == PlayerType.White ? Player1.Key.Mention : Player2.Key.Mention)} " +
-                $"is in check! They can only make a move to get out of check! \n" 
+                $"is in check! They can only make a move to get out of check! \n"
                 : "";
-            errorMsg += Check.Key ? "" : "\n"; 
-            return $"{checkMsg}{errorMsg} **It is {(Turn == PlayerType.White ? Player1.Key.Mention : (Player2.Key == null ? "someone" : Player2.Key.Mention))}'s  ({(Turn == PlayerType.White ? "White" : "Black")}) turn!**"; // B/c player1 always white and vise versa
+            errorMsg += Check.Key ? "" : "\n";
+
+            return new EmbedBuilder()
+                .WithTitle($"{checkMsg}{errorMsg}")
+                .WithImageUrl(Extensions.GetPictureUrl(ChessBoard.UpdateBoardImage(channelId)))
+                .WithFooter($"It is {(user == null ? "someone" : user.Username)}'s turn!", user?.GetAvatarUrl())
+                .WithColor(Turn == PlayerType.White ? new Color(250, 250, 250) : new Color(0, 0, 0))
+                .Build();
         }
 
         private int ConvertLetterToCoord(string letter)

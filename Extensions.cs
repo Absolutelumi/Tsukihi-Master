@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -137,6 +138,8 @@ namespace Tsukihi
             return System.Drawing.Color.FromArgb(bestRed, bestGreen, bestBlue);
         }
 
+        public static Discord.Color GetDiscordColor(this System.Drawing.Color color) { return new Discord.Color(color.R, color.G, color.B); }
+
         public static string GetDescription<T>(this T enumerationValue)
                                     where T : struct
         {
@@ -184,6 +187,11 @@ namespace Tsukihi
                 webClient.DownloadFile(url, Tsukihi.TempPath + "temp.png");
             }
             return Tsukihi.TempPath + "temp.png";
+        }
+
+        public static string GetPictureUrl(string path)
+        {
+            return (Tsukihi.Client.GetUser(774902952862154782) as IUser)?.SendFileAsync(path).Result.Attachments.First().Url;
         }
 
         public static string HtmlDecode(this string text)

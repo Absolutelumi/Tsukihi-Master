@@ -8,6 +8,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using Tsukihi.Objects;
+using Tsukihi.Services;
 
 namespace Tsukihi.Modules
 {
@@ -85,10 +86,16 @@ namespace Tsukihi.Modules
             else await ReplyAsync($"{amount2} {type2}");
         }
 
-        [Command("getuserid")]
-        public async Task getUserID(IGuildUser user)
+        [Command("show"), Summary("Gets image from danbooru with given keywords")]
+        public async Task ShowImage([Remainder] string keywords)
         {
-            await ReplyAsync(user.Id.ToString());
+            var image = DanbooruService.GetRandomImage(keywords.Split(' '));
+            bool isImage = image.Contains("png") || image.Contains("jpg");
+            await ReplyAsync(embed: new EmbedBuilder()
+                .WithTitle(isImage ? string.Empty : "Image not found!")
+                .WithImageUrl(isImage ? image : string.Empty)
+                .WithColor(isImage ? Extensions.GetBestColor(image).GetDiscordColor() : new Color(0, 0, 0))
+                .Build());
         }
     }
 }
