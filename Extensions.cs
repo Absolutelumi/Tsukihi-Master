@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -102,37 +103,44 @@ namespace Tsukihi
 
         public static System.Drawing.Color GetBestColor(string url)
         {
-            Bitmap image = new Bitmap(GetPicture(url));
             const int range = 8;
-            int numberOfCategories = (int)Math.Ceiling(256.0 / range);
+            int numberOfCategories = (int)Math.Ceiling(255.0 / range);
             double[,,] colorCounts = new double[numberOfCategories, numberOfCategories, numberOfCategories];
             int[] bestColor = new int[3];
             double bestCount = 0;
-            for (int imageRow = 0; imageRow < image.Height; imageRow++)
+
+            WebRequest request = WebRequest.Create(url);
+            using (Stream stream = request.GetResponse().GetResponseStream())
+            using (Bitmap bitmap = new Bitmap(stream))
             {
-                for (int imageColumn = 0; imageColumn < image.Width; imageColumn++)
+                BitmapData data = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+                for (int i = 0; i < bitmap.Height * bitmap.Width; i++)
                 {
-                    System.Drawing.Color color = image.GetPixel(imageColumn, imageRow);
-                    int redIndex = (int)(color.R / range);
-                    int greenIndex = (int)(color.G / range);
-                    int blueIndex = (int)(color.B / range);
-                    double normalizedR = color.R / 255.0;
-                    double normalizedG = color.G / 255.0;
-                    double normalizedB = color.B / 255.0;
-                    double min = Math.Min(Math.Min(normalizedR, normalizedG), normalizedB);
-                    double max = Math.Max(Math.Max(normalizedR, normalizedG), normalizedB);
-                    double luminance = (min + max) / 2;
-                    double saturation = Math.Abs(normalizedR - normalizedG) + Math.Abs(normalizedG - normalizedB) + Math.Abs(normalizedB - normalizedR);
-                    colorCounts[redIndex, greenIndex, blueIndex] += saturation * saturation;
-                    if (colorCounts[redIndex, greenIndex, blueIndex] > bestCount)
+                    unsafe
                     {
-                        bestCount = colorCounts[redIndex, greenIndex, blueIndex];
-                        bestColor[0] = redIndex;
-                        bestColor[1] = greenIndex;
-                        bestColor[2] = blueIndex;
+                        byte* pixel = (byte*)data.Scan0 + i * 3;
+                        System.Drawing.Color color = System.Drawing.Color.FromArgb(pixel[0], pixel[1], pixel[2]);
+                        double normalizedR = color.R / 255.0;
+                        double normalizedG = color.G / 255.0;
+                        double normalizedB = color.B / 255.0;
+                        double saturation = Math.Abs(normalizedR - normalizedG) + Math.Abs(normalizedG - normalizedB) + Math.Abs(normalizedB - normalizedR);
+
+                        int redIndex = color.R / range;
+                        int greenIndex = color.G / range;
+                        int blueIndex = color.B / range;
+                        colorCounts[redIndex, greenIndex, blueIndex] += saturation * saturation;
+                        if (colorCounts[redIndex, greenIndex, blueIndex] > bestCount)
+                        {
+                            bestCount = colorCounts[redIndex, greenIndex, blueIndex];
+                            bestColor[0] = redIndex;
+                            bestColor[1] = greenIndex;
+                            bestColor[2] = blueIndex;
+                        }
                     }
                 }
+                bitmap.UnlockBits(data);
             }
+
             int bestRed = bestColor[0] * range + range / 2;
             int bestGreen = bestColor[1] * range + range / 2;
             int bestBlue = bestColor[2] * range + range / 2;
