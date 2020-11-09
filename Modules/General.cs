@@ -94,7 +94,7 @@ namespace Tsukihi.Modules
             await ReplyAsync(embed: new EmbedBuilder()
                 .WithTitle(isImage ? string.Empty : "Image not found!")
                 .WithImageUrl(isImage ? image : string.Empty)
-                .WithColor(isImage ? Extensions.GetBestColor(image).GetDiscordColor() : new Color(0, 0, 0))
+                //.WithColor(isImage ? Extensions.GetBestColor(image).GetDiscordColor() : new Color(0, 0, 0))
                 .Build());
         }
     }
