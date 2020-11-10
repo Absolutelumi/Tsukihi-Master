@@ -114,27 +114,30 @@ namespace Tsukihi
             using (Bitmap bitmap = new Bitmap(stream))
             {
                 BitmapData data = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-                for (int i = 0; i < bitmap.Height * bitmap.Width; i++)
+                for (int row = 0; row < bitmap.Height; row++)
                 {
-                    unsafe
+                    for (int column = 0; column < bitmap.Width; column++)
                     {
-                        byte* pixel = (byte*)data.Scan0 + i * 3;
-                        System.Drawing.Color color = System.Drawing.Color.FromArgb(pixel[0], pixel[1], pixel[2]);
-                        double normalizedR = color.R / 255.0;
-                        double normalizedG = color.G / 255.0;
-                        double normalizedB = color.B / 255.0;
-                        double saturation = Math.Abs(normalizedR - normalizedG) + Math.Abs(normalizedG - normalizedB) + Math.Abs(normalizedB - normalizedR);
-
-                        int redIndex = color.R / range;
-                        int greenIndex = color.G / range;
-                        int blueIndex = color.B / range;
-                        colorCounts[redIndex, greenIndex, blueIndex] += saturation * saturation;
-                        if (colorCounts[redIndex, greenIndex, blueIndex] > bestCount)
+                        unsafe
                         {
-                            bestCount = colorCounts[redIndex, greenIndex, blueIndex];
-                            bestColor[0] = redIndex;
-                            bestColor[1] = greenIndex;
-                            bestColor[2] = blueIndex;
+                            byte* pixel = (byte*)data.Scan0 + row * data.Stride + column * 3;
+                            System.Drawing.Color color = System.Drawing.Color.FromArgb(pixel[0], pixel[1], pixel[2]);
+                            double normalizedR = color.R / 255.0;
+                            double normalizedG = color.G / 255.0;
+                            double normalizedB = color.B / 255.0;
+                            double saturation = Math.Abs(normalizedR - normalizedG) + Math.Abs(normalizedG - normalizedB) + Math.Abs(normalizedB - normalizedR);
+
+                            int redIndex = color.R / range;
+                            int greenIndex = color.G / range;
+                            int blueIndex = color.B / range;
+                            colorCounts[redIndex, greenIndex, blueIndex] += saturation * saturation;
+                            if (colorCounts[redIndex, greenIndex, blueIndex] > bestCount)
+                            {
+                                bestCount = colorCounts[redIndex, greenIndex, blueIndex];
+                                bestColor[0] = redIndex;
+                                bestColor[1] = greenIndex;
+                                bestColor[2] = blueIndex;
+                            }
                         }
                     }
                 }
@@ -272,7 +275,7 @@ namespace Tsukihi
             {
                 for (int i2 = 0; i2 < arraySource.GetLength(1); i2++)
                 {
-                    
+
                 }
             }
         }
