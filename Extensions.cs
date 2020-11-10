@@ -197,7 +197,7 @@ namespace Tsukihi
             string path;
             using (var webClient = new WebClient())
             {
-                path = $"{url.Split('/')[url.Split('/').Length - 1]}temp.{(url.Contains("png") ? "png" : url.Contains("jpg") ? "jpg" : "jpeg")}";
+                path = $"{url.Split('/')[url.Split('/').Length - 1]}";
                 webClient.DownloadFile(new Uri(url), Tsukihi.TempPath + path);
             }
             return Tsukihi.TempPath + path;

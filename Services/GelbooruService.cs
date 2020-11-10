@@ -15,7 +15,7 @@ namespace Tsukihi.Services
         public static string GetRandomImage(string[] tags)
         {
             StringBuilder urlBuilder = new StringBuilder();
-            tags = tags.Select(tag => $"*{HttpUtility.UrlEncode(tag)}*").ToArray();
+            tags = tags.Select(tag => $"*{tag}*").ToArray();
             urlBuilder.AppendFormat("https://gelbooru.com/index.php?page=dapi&s=post&q=index&tags={0}", string.Join("%20", tags));
             try
             {
