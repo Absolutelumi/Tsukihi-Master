@@ -121,7 +121,7 @@ namespace Tsukihi
                         unsafe
                         {
                             byte* pixel = (byte*)data.Scan0 + row * data.Stride + column * 3;
-                            System.Drawing.Color color = System.Drawing.Color.FromArgb(pixel[0], pixel[1], pixel[2]);
+                            System.Drawing.Color color = System.Drawing.Color.FromArgb(pixel[2], pixel[1], pixel[0]);
                             double normalizedR = color.R / 255.0;
                             double normalizedG = color.G / 255.0;
                             double normalizedB = color.B / 255.0;
