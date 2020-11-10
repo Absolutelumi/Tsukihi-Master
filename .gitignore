@@ -352,3 +352,5 @@ MigrationBackup/
 App.config
 Settings.settings
 Settings.Designer.cs
+
+Temp/

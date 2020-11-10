@@ -36,7 +36,7 @@ namespace Tsukihi.Services
 
                 int pages = (int)Math.Ceiling(count / 100.0);
                 int page = random.Next(0, pages);
-                urlBuilder.AppendFormat("&p={0}", page);
+                urlBuilder.AppendFormat("&pid={0}", page);
                 List<string> images = new List<string>();
                 using (XmlReader reader = XmlReader.Create(urlBuilder.ToString()))
                 {
