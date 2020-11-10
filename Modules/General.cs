@@ -89,9 +89,9 @@ namespace Tsukihi.Modules
         [Command("show"), Summary("Gets image from danbooru with given keywords")]
         public async Task ShowImage([Remainder] string keywords)
         {
-            var image = GelbooruService.GetRandomImage(keywords.Split(' '));
+           var image = GelbooruService.GetRandomImage(keywords.Split(' '));
            bool isImage = image.Contains("png") || image.Contains("jpg") || image.Contains("jpeg");
-            await ReplyAsync(embed: new EmbedBuilder()
+           await ReplyAsync(embed: new EmbedBuilder()
                 .WithTitle(isImage ? string.Empty : "Image not found!")
                 .WithImageUrl(isImage ? image : string.Empty)
                 .WithColor(isImage ? Extensions.GetBestColor(image).GetDiscordColor() : new Color(0, 0, 0))
